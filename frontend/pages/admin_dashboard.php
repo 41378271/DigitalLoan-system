@@ -16,34 +16,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
     <?php include '../partials/navbar.php'; ?>
 
-    <!-- Admin Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out pt-16 flex flex-col hidden sm:flex">
-        <div class="p-6 flex-1 overflow-y-auto">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-3">Admin Controls</h3>
-            <nav class="space-y-1.5">
-                <a href="admin_dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-50 text-brand-700 font-semibold transition-colors">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard Header
-                </a>
-                <a href="admin_users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
-                    <i data-lucide="users" class="w-5 h-5 text-gray-400"></i> Manage Users
-                </a>
-                <a href="admin_loans.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
-                    <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i> Loan Applications
-                </a>
-                <a href="admin_kyc.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-gray-400"></i> KYC Review
-                </a>
-                <a href="admin_reports.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
-                    <i data-lucide="pie-chart" class="w-5 h-5 text-gray-400"></i> System Reports
-                </a>
-            </nav>
-        </div>
-        <div class="p-4 border-t border-gray-100">
-            <a href="../../backend/api/auth/logout.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 font-medium transition-colors w-full">
-                <i data-lucide="log-out" class="w-5 h-5 text-red-500"></i> Secure Logout
-            </a>
-        </div>
-    </aside>
+    <?php include '../partials/sidebar.php'; ?>
 
     <!-- Main Content Area -->
     <main class="md:ml-64 pt-16 h-screen overflow-y-auto pb-24 md:pb-8">
@@ -74,7 +47,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <div>
                         <h3 class="text-gray-500 text-sm font-medium mb-1">User Management</h3>
                         <p class="text-2xl font-bold text-gray-900 mb-4">Users</p>
-                        <a href="admin_users.php" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                        <a href="users" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
                             Go to directory <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
                     </div>
@@ -90,7 +63,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <div>
                         <h3 class="text-gray-500 text-sm font-medium mb-1">Loan Processing</h3>
                         <p class="text-2xl font-bold text-gray-900 mb-4">Applications</p>
-                        <a href="admin_loans.php" class="text-sm font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
+                        <a href="loans" class="text-sm font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
                             Review pipeline <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
                     </div>
@@ -106,7 +79,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <div>
                         <h3 class="text-gray-500 text-sm font-medium mb-1">Identity Verification</h3>
                         <p class="text-2xl font-bold text-gray-900 mb-4">KYC Review</p>
-                        <a href="admin_kyc.php" class="text-sm font-semibold text-amber-600 hover:text-amber-800 flex items-center gap-1">
+                        <a href="kyc" class="text-sm font-semibold text-amber-600 hover:text-amber-800 flex items-center gap-1">
                             Verify documents <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
                     </div>
@@ -122,7 +95,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <div>
                         <h3 class="text-gray-500 text-sm font-medium mb-1">System Analytics</h3>
                         <p class="text-2xl font-bold text-gray-900 mb-4">Reports</p>
-                        <a href="admin_reports.php" class="text-sm font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
+                        <a href="reports" class="text-sm font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
                             View insights <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
                     </div>

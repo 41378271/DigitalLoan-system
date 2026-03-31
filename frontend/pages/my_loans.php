@@ -46,7 +46,7 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">No loans found</h3>
                 <p class="text-gray-500 max-w-sm mb-6">You don't have any active or past loans on record.</p>
-                <a href="apply_loan.php" class="bg-brand-600 text-white rounded-xl px-6 py-2.5 font-semibold hover:bg-brand-700 transition-colors shadow-sm inline-flex items-center gap-2">
+                <a href="apply-loan" class="bg-brand-600 text-white rounded-xl px-6 py-2.5 font-semibold hover:bg-brand-700 transition-colors shadow-sm inline-flex items-center gap-2">
                     <i data-lucide="plus-circle" class="w-4 h-4"></i> Apply Now
                 </a>
             </div>

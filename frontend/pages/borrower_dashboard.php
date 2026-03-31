@@ -114,7 +114,7 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                     
                     <div class="mt-6">
                         <?php if (in_array($kyc_status, ['not_uploaded', 'rejected'])): ?>
-                            <a href="upload_kyc.php" class="w-full flex justify-center bg-gray-900 text-white rounded-xl py-2 text-sm font-semibold hover:bg-gray-800 transition-colors shadow-sm">Upload Documents</a>
+                            <a href="kyc" class="w-full flex justify-center bg-gray-900 text-white rounded-xl py-2 text-sm font-semibold hover:bg-gray-800 transition-colors shadow-sm">Upload Documents</a>
                         <?php else: ?>
                             <button disabled class="w-full bg-gray-100 text-gray-400 rounded-xl py-2 text-sm font-semibold cursor-not-allowed">Docs Uploaded</button>
                         <?php endif; ?>
@@ -137,7 +137,7 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                     
                     <div class="mt-6 relative z-10">
                         <?php if ($kyc_status === 'approved'): ?>
-                            <a href="apply_loan.php" class="w-full flex justify-center bg-brand-500 text-white rounded-xl py-2 text-sm font-semibold hover:bg-brand-400 transition-colors shadow-sm border border-brand-400">Apply for a Loan</a>
+                            <a href="apply-loan" class="w-full flex justify-center bg-brand-500 text-white rounded-xl py-2 text-sm font-semibold hover:bg-brand-400 transition-colors shadow-sm border border-brand-400">Apply for a Loan</a>
                         <?php else: ?>
                             <button onclick="showToast('You must verify your KYC documents before applying for a loan.', 'warning')" class="w-full flex justify-center bg-white/10 text-white/50 rounded-xl py-2 text-sm font-semibold cursor-not-allowed border border-white/5">KYC Required to Apply</button>
                         <?php endif; ?>
@@ -194,9 +194,21 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                                 <i data-lucide="download" class="h-6 w-6 text-emerald-600"></i>
                             </div>
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                                <h3 class="text-lg font-bold leading-6 text-gray-900" id="modal-title">Deposit to Wallet</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500 mb-4">You will receive an M-Pesa STK Push prompt on your registered phone.</p>
+                                <h3 class="text-lg font-bold leading-6 text-gray-900" id="modal-title">Deposit via M-Pesa</h3>
+                                <div class="mt-2 text-left">
+                                    <p class="text-sm text-gray-500 mb-4">You will receive an STK Push prompt on your phone.</p>
+                                    
+                                    <div class="mb-4">
+                                        <label for="depositPhone" class="block text-sm font-medium text-gray-700 mb-1">M-Pesa Number</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                                                <i data-lucide="smartphone" class="w-4 h-4"></i>
+                                            </div>
+                                            <!-- Pre-fill with session phone if available -->
+                                            <input type="tel" id="depositPhone" value="<?= htmlspecialchars($_SESSION['phone'] ?? '') ?>" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors sm:text-sm outline-none" placeholder="07xxxxxx">
+                                        </div>
+                                    </div>
+
                                     <div>
                                         <label for="depositAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount (KES)</label>
                                         <div class="relative">
@@ -211,7 +223,7 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" onclick="submitDeposit()" class="inline-flex w-full justify-center rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 sm:ml-3 sm:w-auto transition-colors">Confirm Deposit</button>
+                        <button type="button" id="btnConfirmDeposit" onclick="submitDeposit()" class="inline-flex w-full justify-center rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 sm:ml-3 sm:w-auto transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">Confirm Deposit</button>
                         <button type="button" onclick="closeModal('depositModal')" class="mt-3 inline-flex w-full justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-colors">Cancel</button>
                     </div>
                 </div>
@@ -232,7 +244,7 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                             </div>
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                                 <h3 class="text-lg font-bold leading-6 text-gray-900" id="modal-title">Withdraw from Wallet</h3>
-                                <div class="mt-2">
+                                <div class="mt-2 text-left">
                                     <p class="text-sm text-gray-500 mb-4">Funds will be sent to your M-Pesa immediately.</p>
                                     <div>
                                         <label for="withdrawAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount (KES)</label>
@@ -414,27 +426,39 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
         // Transactions
         async function submitDeposit() {
             const amtStr = document.getElementById('depositAmount').value;
+            const phoneStr = document.getElementById('depositPhone').value;
             const amount = parseFloat(amtStr);
+            
+            if (!phoneStr) {
+                showToast("Please enter an M-Pesa number", "error");
+                return;
+            }
             if (!amount || amount <= 0) {
                 showToast("Please enter a valid amount", "error");
                 return;
             }
 
-            // In real system, this would trigger STK push api. For now, hitting deposit testing api
+            const btn = document.getElementById('btnConfirmDeposit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-2"></i> Processing...`;
+            btn.disabled = true;
+            lucide.createIcons();
+
             try {
-                // To simulate M-Pesa integration realistically, you would call M-PESA
-                // const fd = new FormData(); fd.append("phone", "SESSION_PHONE"); fd.append("amount", amount);
-                // await apiCall('../mpesa/stkpush.php', fd);
+                // Call actual M-Pesa STK Push Endpoint
+                const data = await apiCall('transactions/mpesa_pay.php', { phone: phoneStr, amount: amount });
                 
-                const data = await apiCall('wallet/deposit.php', { amount: amount });
-                showToast(data.message, 'success');
+                showToast("M-Pesa STK push sent! Check your phone to enter PIN.", 'success');
                 closeModal('depositModal');
                 document.getElementById('depositAmount').value = '';
                 
-                await loadWallet();
-                await loadWalletHistory();
             } catch (e) {
-                // handled by apiCall toast
+                // error is already handled and toasted by apiCall wrapper if properly configured
+                // if not, fallback handling
+                if(e.message) showToast(e.message, "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
@@ -554,7 +578,7 @@ $kyc_status = $kyc['status'] ?? 'not_uploaded';
                 // Fallback to legacy chatbot api structure or new one if modified
                 const fd = new FormData();
                 fd.append("message", msg);
-                const res = await fetch("/digital-loan-system/backend/api/chatbot/respond.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/chatbot/respond.php", {
                     method: 'POST',
                     body: fd
                 });

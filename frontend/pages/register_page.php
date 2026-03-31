@@ -155,7 +155,7 @@ if (isset($_SESSION['user_id'])) {
             <!-- Footer Link -->
             <p class="mt-8 text-center text-sm text-gray-500">
                 Already have an account? 
-                <a href="login_page.php" class="font-semibold text-brand-600 hover:text-brand-500 transition-colors">Sign in here</a>
+                <a href="login" class="font-semibold text-brand-600 hover:text-brand-500 transition-colors">Sign in here</a>
             </p>
         </div>
     </div>

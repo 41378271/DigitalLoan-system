@@ -1,22 +1,30 @@
 <?php
 $role = $_SESSION['role'] ?? 'borrower';
-$current_page = basename($_SERVER['PHP_SELF']);
+$current_route = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Strip base path to get just the route like /dashboard
+$scriptName = dirname($_SERVER['SCRIPT_NAME']);
+$basePath = ($scriptName === '/' || $scriptName === '\\') ? '' : $scriptName;
+if ($basePath !== '' && strpos($current_route, $basePath) === 0) {
+    $current_route = substr($current_route, strlen($basePath));
+}
+if ($current_route === '') $current_route = '/';
 
 $borrower_links = [
-    ['url' => 'borrower_dashboard.php', 'icon' => 'layout-dashboard', 'title' => 'Dashboard'],
-    ['url' => 'apply_loan.php', 'icon' => 'plus-circle', 'title' => 'Apply for Loan'],
-    ['url' => 'my_loans.php', 'icon' => 'credit-card', 'title' => 'My Loans'],
-    ['url' => 'upload_kyc.php', 'icon' => 'shield-check', 'title' => 'Verification (KYC)'],
-    ['url' => 'profile.php', 'icon' => 'user', 'title' => 'Profile Settings'],
+    ['url' => '/dashboard', 'icon' => 'layout-dashboard', 'title' => 'Dashboard'],
+    ['url' => '/apply-loan', 'icon' => 'plus-circle', 'title' => 'Apply for Loan'],
+    ['url' => '/my-loans', 'icon' => 'credit-card', 'title' => 'My Loans'],
+    ['url' => '/kyc', 'icon' => 'shield-check', 'title' => 'Verification (KYC)'],
+    ['url' => '/profile', 'icon' => 'user', 'title' => 'Profile Settings'],
 ];
 
 $admin_links = [
-    ['url' => 'admin_dashboard.php', 'icon' => 'pie-chart', 'title' => 'Overview'],
-    ['url' => 'admin_loans.php', 'icon' => 'briefcase', 'title' => 'Manage Loans'],
-    ['url' => 'admin_kyc.php', 'icon' => 'file-search', 'title' => 'Review KYC'],
-    ['url' => 'admin_users.php', 'icon' => 'users', 'title' => 'Manage Users'],
-    ['url' => 'admin_reports.php', 'icon' => 'file-spreadsheet', 'title' => 'Reports & Export'],
-    ['url' => 'profile.php', 'icon' => 'user', 'title' => 'Profile Settings'],
+    ['url' => '/admin/dashboard', 'icon' => 'pie-chart', 'title' => 'Overview'],
+    ['url' => '/admin/loans', 'icon' => 'briefcase', 'title' => 'Manage Loans'],
+    ['url' => '/admin/kyc', 'icon' => 'file-search', 'title' => 'Review KYC'],
+    ['url' => '/admin/users', 'icon' => 'users', 'title' => 'Manage Users'],
+    ['url' => '/admin/reports', 'icon' => 'file-spreadsheet', 'title' => 'Reports & Export'],
+    ['url' => '/profile', 'icon' => 'user', 'title' => 'Profile Settings'],
 ];
 
 $links = ($role === 'admin') ? $admin_links : $borrower_links;
@@ -30,7 +38,7 @@ $links = ($role === 'admin') ? $admin_links : $borrower_links;
             <nav class="flex-1 space-y-1 bg-white">
                 <?php foreach ($links as $link): ?>
                     <?php 
-                        $isActive = ($current_page === $link['url']); 
+                        $isActive = ($current_route === $link['url']); 
                         $baseClasses = "group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200";
                         $activeClasses = $isActive 
                             ? "bg-brand-50 text-brand-700 shadow-sm" 
@@ -41,7 +49,7 @@ $links = ($role === 'admin') ? $admin_links : $borrower_links;
                             ? "text-brand-600"
                             : "text-gray-400 group-hover:text-gray-500";
                     ?>
-                    <a href="/digital-loan-system/frontend/pages/<?= $link['url'] ?>" class="<?= $baseClasses ?> <?= $activeClasses ?>">
+                    <a href="<?= $basePath . $link['url'] ?>" class="<?= $baseClasses ?> <?= $activeClasses ?>">
                         <i data-lucide="<?= $link['icon'] ?>" class="<?= $iconBaseClasses ?> <?= $iconActiveClasses ?>"></i>
                         <?= $link['title'] ?>
                     </a>
@@ -50,7 +58,7 @@ $links = ($role === 'admin') ? $admin_links : $borrower_links;
         </div>
 
         <div class="px-4 mt-auto pb-6">
-            <a href="/digital-loan-system/backend/api/auth/logout.php" class="group flex items-center px-3 py-2.5 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 hover:text-red-700 transition-colors">
+            <a href="<?= $basePath ?>/logout" class="group flex items-center px-3 py-2.5 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50 hover:text-red-700 transition-colors">
                 <i data-lucide="log-out" class="mr-3 flex-shrink-0 w-5 h-5 text-red-400 group-hover:text-red-600"></i>
                 Sign Out
             </a>
@@ -65,16 +73,16 @@ $links = ($role === 'admin') ? $admin_links : $borrower_links;
         // Show only max 4 links on mobile bottom nav + profile
         $mobile_links = array_slice($links, 0, 4);
         foreach ($mobile_links as $link): 
-            $isActive = ($current_page === $link['url']);
+            $isActive = ($current_route === $link['url']);
             $textClass = $isActive ? "text-brand-600" : "text-gray-500";
         ?>
-            <a href="/digital-loan-system/frontend/pages/<?= $link['url'] ?>" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
+            <a href="<?= $basePath . $link['url'] ?>" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
                 <i data-lucide="<?= $link['icon'] ?>" class="w-5 h-5 mb-1 <?= $textClass ?> group-hover:text-brand-600"></i>
             </a>
         <?php endforeach; ?>
         
-        <a href="/digital-loan-system/frontend/pages/profile.php" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
-            <i data-lucide="user" class="w-5 h-5 mb-1 <?= ($current_page === 'profile.php') ? 'text-brand-600' : 'text-gray-500' ?> group-hover:text-brand-600"></i>
+        <a href="<?= $basePath ?>/profile" class="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group">
+            <i data-lucide="user" class="w-5 h-5 mb-1 <?= ($current_route === '/profile') ? 'text-brand-600' : 'text-gray-500' ?> group-hover:text-brand-600"></i>
         </a>
     </div>
 </div>

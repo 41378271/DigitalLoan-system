@@ -116,7 +116,7 @@
                 options.body = JSON.stringify(data);
             }
             
-            const res = await fetch(`/digital-loan-system/backend/api/${endpoint}`, options);
+            const res = await fetch(`<?= $basePath ?? '' ?>/backend/api/${endpoint}`, options);
             const contentType = res.headers.get("content-type");
             
             if (contentType && contentType.indexOf("application/json") !== -1) {

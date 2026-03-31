@@ -46,10 +46,10 @@ $kyc_status = $row['status'] ?? 'not_uploaded';
                     </div>
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Verification Required</h2>
                     <p class="text-gray-500 mb-8">You must have an approved KYC profile before applying for a loan. This helps us keep the platform secure and comply with financial regulations.</p>
-                    <a href="upload_kyc.php" class="bg-brand-600 text-white rounded-xl px-8 py-3 font-semibold hover:bg-brand-700 transition-colors shadow-sm inline-flex items-center gap-2 border border-transparent">
+                    <a href="kyc" class="bg-brand-600 text-white rounded-xl px-8 py-3 font-semibold hover:bg-brand-700 transition-colors shadow-sm inline-flex items-center gap-2 border border-transparent">
                         <i data-lucide="upload" class="w-4 h-4"></i> Upload Documents
                     </a>
-                    <a href="borrower_dashboard.php" class="mt-4 text-gray-500 hover:text-gray-900 font-medium text-sm transition-colors">Return to Dashboard</a>
+                    <a href="dashboard" class="mt-4 text-gray-500 hover:text-gray-900 font-medium text-sm transition-colors">Return to Dashboard</a>
                 </div>
             <?php else: ?>
 

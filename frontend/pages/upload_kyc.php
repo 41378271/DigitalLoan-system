@@ -233,7 +233,7 @@ if (!isset($_SESSION['user_id'])) {
             try {
                 // Determine base URL depending on if we use apiCall helper or raw fetch.
                 // We'll use robust raw fetch matching legacy paths.
-                const res = await fetch("/digital-loan-system/backend/api/kyc/upload.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/kyc/upload.php", {
                     method: "POST",
                     body: formData
                 });

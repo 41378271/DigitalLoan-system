@@ -1,227 +1,17 @@
-<!DOCTYPE html>  
+<?php
+session_start();
+if (isset($_SESSION['user_id'])) {
+    $dashboard = ($_SESSION['role'] === 'admin') ? 'admin/dashboard' : 'dashboard';
+    header("Location: $dashboard");
+    exit;
+}
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    *{
-      box-sizing: border-box;
-    }
-
-    body{
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2415ca, #0d6efd);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .login-wrapper{
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    .login-card{
-      border: none;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
-      background: #fff;
-    }
-
-    .left-panel{
-      background: linear-gradient(160deg, #1b0fa3, #0d6efd);
-      color: #fff;
-      padding: 48px 38px;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .logo-box{
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.16);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 22px;
-    }
-
-    .left-panel h1{
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .left-panel p{
-      color: rgba(255,255,255,0.92);
-      font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    .feature-list{
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .feature-list li{
-      margin-bottom: 14px;
-      padding-left: 26px;
-      position: relative;
-    }
-
-    .feature-list li::before{
-      content: "✓";
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-weight: bold;
-    }
-
-    .right-panel{
-      padding: 48px 38px;
-      background: #fff;
-    }
-
-    .form-title{
-      font-size: 2rem;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 8px;
-    }
-
-    .form-subtitle{
-      color: #6b7280;
-      margin-bottom: 28px;
-    }
-
-    .form-label{
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 8px;
-    }
-
-    .form-control{
-      min-height: 52px;
-      border-radius: 14px;
-      border: 1px solid #d1d5db;
-      box-shadow: none;
-      font-size: 15px;
-    }
-
-    .form-control:focus{
-      border-color: #2415ca;
-      box-shadow: 0 0 0 0.2rem rgba(36,21,202,0.12);
-    }
-
-    .btn-login{
-      min-height: 52px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #2415ca, #0d6efd);
-      border: none;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .btn-login:hover{
-      opacity: 0.96;
-    }
-
-    #msg{
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      display: none;
-      font-size: 14px;
-    }
-
-    #msg.error{
-      display: block;
-      background: #fff1f2;
-      color: #b42318;
-      border: 1px solid #f1b0b7;
-    }
-
-    #msg.success{
-      display: block;
-      background: #ecfdf3;
-      color: #027a48;
-      border: 1px solid #a6f4c5;
-    }
-
-    #msg.loading{
-      display: block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-    }
-
-    .register-link{
-      margin-top: 22px;
-      display: block;
-      text-align: center;
-      color: #4b5563;
-      text-decoration: none;
-    }
-
-    .register-link a{
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .register-link a:hover{
-      text-decoration: underline;
-    }
-
-    @media (max-width: 991.98px){
-      .left-panel{
-        display: none;
-      }
-
-      .right-panel{
-        padding: 34px 24px;
-      }
-
-      .form-title{
-        font-size: 1.7rem;
-      }
-    }
-  </style>
+    <title>Login | KashFlow Digital Loans</title>
+    <?php include '../partials/head.php'; ?>
 </head>
-<body>
-
-  <div class="login-wrapper">
-    <div class="card login-card">
-      <div class="row g-0">
-        <div class="col-lg-6">
-          <div class="left-panel">
-            <div class="logo-box">DL</div>
-            <h1>Digital Loan System</h1>
-            <p>
-              Secure access for borrowers and administrators. Sign in to manage loans,
-              KYC, wallet activity, and notifications from one place.
-            </p>
-
-            <ul class="feature-list">
-              <li>Fast loan application access</li>
-              <li>Easy KYC status tracking</li>
-              <li>Wallet and notifications in one dashboard</li>
-              <li>Secure admin and borrower login</li>
-            </ul>
 <body class="bg-gray-50 flex h-screen overflow-hidden">
 
     <!-- Left Hero Section (Hidden on mobile) -->
@@ -337,12 +127,69 @@
                 </div>
             </form>
 
-        msg.className = "error";
-      }
-    });
-  </script>
+            <!-- Footer Link -->
+            <p class="mt-8 text-center text-sm text-gray-500">
+                Don't have an account? 
+                <a href="register" class="font-semibold text-brand-600 hover:text-brand-500 transition-colors">Create one now</a>
+            </p>
+        </div>
+    </div>
 
-  <?php include "../partials/chatbot_widget.php"; ?>
+    <!-- Initialize Logic -->
+    <script>
+        lucide.createIcons();
 
+        // Password Toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        
+        togglePassword.addEventListener('click', function (e) {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            if (type === 'text') {
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // Form Submit
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnSubmit');
+            const formData = new FormData(this);
+
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-2"></i> Logging in...`;
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const data = await apiCall('auth/login.php', formData);
+                showToast(data.message, 'success');
+                
+                setTimeout(() => {
+                    // Navigate correctly based on role
+                    if (data.redirect) {
+                        // We must convert backend PHP path to frontend router path
+                        if (data.redirect === 'admin_dashboard.php' || data.redirect.includes('admin')) {
+                            window.location.href = 'admin/dashboard';
+                        } else {
+                            window.location.href = 'dashboard';
+                        }
+                    } else {
+                        window.location.href = 'dashboard';
+                    }
+                }, 1000);
+            } catch (error) {
+                // Revert button on error
+                btn.innerHTML = `<span>Sign In</span><i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>`;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        });
+    </script>
 </body>
 </html>

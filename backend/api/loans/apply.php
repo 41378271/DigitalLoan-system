@@ -1,60 +1,48 @@
 <?php
-session_start();
-require_once '../../config/db.php';
+require_once "../../config/db.php";
+require_once "../../core/response.php";
+require_once "../../core/auth_guard.php";
+require_once "../../core/loan_calculator.php";
 
-header("Content-Type: application/json");
-
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["success" => false, "message" => "Not logged in"]);
-    exit;
-}
-
-$user_id = (int)$_SESSION['user_id'];
+$user_id = requireBorrower();
 
 $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0;
 $term   = isset($_POST['term_months']) ? (int)$_POST['term_months'] : 0;
+$purpose = trim($_POST['purpose'] ?? '');
 
 if ($amount <= 0 || $term <= 0) {
-    echo json_encode(["success" => false, "message" => "Invalid input"]);
-    exit;
+    jsonError("Invalid loan amount or term.");
 }
 
-// Collateral (REQUIRED)
-
+// Collateral validation
 $collateral_type = trim($_POST['collateral_type'] ?? '');
 $collateral_description = trim($_POST['collateral_description'] ?? '');
 $collateral_value = isset($_POST['collateral_value']) ? (float)$_POST['collateral_value'] : 0;
 
 if ($collateral_type === '' || $collateral_description === '' || $collateral_value <= 0) {
-    echo json_encode(["success" => false, "message" => "Collateral details are required"]);
-    exit;
+    jsonError("Collateral details are required.");
 }
 
-// Optional rule: collateral must be >= loan amount (you can remove if you want)
 if ($collateral_value < $amount) {
-    echo json_encode(["success" => false, "message" => "Collateral value must be at least the loan amount"]);
-    exit;
+    jsonError("Collateral value must be at least the loan amount.");
 }
 
-// Handle proof upload (OPTIONAL)
-
+// Upload proof if present
 $proof_file_name = null;
 $proof_file_path = null;
 
 if (isset($_FILES['collateral_proof']) && $_FILES['collateral_proof']['error'] === UPLOAD_ERR_OK) {
     $file = $_FILES['collateral_proof'];
-
     $maxSize = 5 * 1024 * 1024; // 5MB
+
     if ($file['size'] > $maxSize) {
-        echo json_encode(["success" => false, "message" => "Collateral proof too large (max 5MB)"]);
-        exit;
+        jsonError("Collateral proof is too large (max 5MB).");
     }
 
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $allowed = ["pdf", "jpg", "jpeg", "png"];
     if (!in_array($ext, $allowed)) {
-        echo json_encode(["success" => false, "message" => "Proof must be PDF/JPG/PNG"]);
-        exit;
+        jsonError("Proof must be a PDF, JPG, or PNG file.");
     }
 
     $uploadDir = __DIR__ . "/../../uploads/collateral/";
@@ -65,39 +53,45 @@ if (isset($_FILES['collateral_proof']) && $_FILES['collateral_proof']['error'] =
     $safeName = "collateral_" . $user_id . "_" . bin2hex(random_bytes(8)) . "." . $ext;
 
     if (!move_uploaded_file($file['tmp_name'], $uploadDir . $safeName)) {
-        echo json_encode(["success" => false, "message" => "Failed to upload proof file"]);
-        exit;
+        jsonError("Failed to upload proof file.");
     }
 
     $proof_file_name = $file['name'];
-    $proof_file_path = "backend/uploads/collateral/" . $safeName; // used for linking from frontend
+    $proof_file_path = "backend/uploads/collateral/" . $safeName;
 }
 
-
-// Insert loan + collateral (TRANSACTION)
+// Perform Mathematics
+$loanData = LoanCalculator::calculateEMI($amount, $term);
 
 $conn->begin_transaction();
 
 try {
-    // Insert into loans (your original table)
-    $sql = "INSERT INTO loans (user_id, amount, term_months) VALUES (?, ?, ?)";
+    // 1. Insert Loan
+    $sql = "INSERT INTO loans (user_id, amount, term_months, interest_rate, monthly_payment, total_repayable, remaining_balance, purpose, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'submitted')";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("idi", $user_id, $amount, $term);
+    $stmt->bind_param("ididddds", 
+        $user_id, 
+        $amount, 
+        $term, 
+        $loanData['interest_rate_pct'],
+        $loanData['monthly_payment'],
+        $loanData['total_repayable'],
+        $loanData['total_repayable'], // remaining starts at full total payable
+        $purpose
+    );
 
     if (!$stmt->execute()) {
-        throw new Exception("Failed to insert loan");
+        throw new Exception("Failed to save loan application.");
     }
-
+    
     $loan_id = $conn->insert_id;
 
-    // Insert collateral (requires loan_collateral table)
-    $sql2 = "INSERT INTO loan_collateral
-                (user_id, loan_id, collateral_type, description, estimated_value, proof_file_name, proof_file_path, status)
-             VALUES
-                (?, ?, ?, ?, ?, ?, ?, 'pledged')";
+    // 2. Insert Collateral
+    $sql2 = "INSERT INTO loan_collateral (user_id, loan_id, collateral_type, description, estimated_value, proof_file_name, proof_file_path, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, 'pledged')";
     $stmt2 = $conn->prepare($sql2);
-    $stmt2->bind_param(
-        "iissdss",
+    $stmt2->bind_param("iissdss",
         $user_id,
         $loan_id,
         $collateral_type,
@@ -108,16 +102,46 @@ try {
     );
 
     if (!$stmt2->execute()) {
-        throw new Exception("Failed to insert collateral");
+        throw new Exception("Failed to save collateral information.");
     }
+
+    // 3. Generate and Insert Amortization Schedule
+    $schedule = LoanCalculator::generateSchedule($amount, $term);
+    
+    $sch_sql = "INSERT INTO loan_repayment_schedule (loan_id, instalment_number, due_date, amount_due, principal_component, interest_component)
+                VALUES (?, ?, ?, ?, ?, ?)";
+    $sch_stmt = $conn->prepare($sch_sql);
+    
+    foreach ($schedule as $instalment) {
+        $sch_stmt->bind_param("iisddd", 
+            $loan_id,
+            $instalment['instalment_number'],
+            $instalment['due_date'],
+            $instalment['amount_due'],
+            $instalment['principal_component'],
+            $instalment['interest_component']
+        );
+        if (!$sch_stmt->execute()) {
+            throw new Exception("Failed to generate repayment schedule.");
+        }
+    }
+
+    // 4. Create Notification
+    $msg = "Your loan application for KES " . number_format($amount) . " has been submitted and is under review.";
+    $notif_sql = "INSERT INTO notifications (user_id, title, message) VALUES (?, 'Loan Submitted', ?)";
+    $notif_stmt = $conn->prepare($notif_sql);
+    $notif_stmt->bind_param("is", $user_id, $msg);
+    $notif_stmt->execute();
 
     $conn->commit();
 
-    echo json_encode(["success" => true, "message" => "Loan application submitted with collateral"]);
-    exit;
+    jsonSuccess([
+        "loan_id" => $loan_id,
+        "math" => $loanData
+    ], "Loan application submitted successfully.");
 
 } catch (Exception $e) {
     $conn->rollback();
-    echo json_encode(["success" => false, "message" => "Error applying for loan"]);
-    exit;
+    jsonError("Error applying for loan: " . $e->getMessage(), 500);
 }
+?>

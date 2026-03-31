@@ -9,186 +9,141 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    body{
-      background: #f5f7fb;
-      font-family: Arial, sans-serif;
-    }
-
-    #splashScreen{
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #0d6efd, #084298);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: #fff;
-      z-index: 99999;
-    }
-
-    .splash-logo{
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #fff;
-      color: #0d6efd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-      font-weight: bold;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.2);
-      animation: pulse 1.2s infinite;
-    }
-
-    .loader{
-      width: 42px;
-      height: 42px;
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top: 4px solid #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-top: 18px;
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-
-    #pageContent{ display:none; }
-
-    .sidebar{
-      min-height: 100vh;
-      background: #111827;
-      color: #fff;
-      padding: 24px 16px;
-    }
-
-    .sidebar a{
-      display: block;
-      color: #d1d5db;
-      text-decoration: none;
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-    }
-
-    .sidebar a:hover,
-    .sidebar a.active{
-      background: #1f2937;
-      color: #fff;
-    }
-
-    .top-card{
-      border: none;
-      border-radius: 18px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.06);
-    }
-
-    .stat-card{
-      border: none;
-      border-radius: 16px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
-    }
-  </style>
+    <title>Admin Dashboard | KashFlow</title>
+    <?php include '../partials/head.php'; ?>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased overflow-hidden">
 
-<div id="splashScreen">
-  <div class="splash-logo">A</div>
-  <h2 class="fw-bold mb-2">Admin Dashboard</h2>
-  <div>Loading admin panel...</div>
-  <div class="loader"></div>
-</div>
+    <?php include '../partials/navbar.php'; ?>
 
-<div id="pageContent">
-  <div class="container-fluid">
-    <div class="row g-0">
-      <div class="col-md-3 col-lg-2 sidebar">
-        <h3 class="fw-bold mb-4">Admin Panel</h3>
-        <a href="admin_dashboard.php" class="active">Dashboard</a>
-        <a href="admin_users.php">Users</a>
-        <a href="admin_loans.php">Applications</a>
-        <a href="admin_kyc.php">KYC Review</a>
-        <a href="admin_reports.php">Reports</a>
-        <a href="../../backend/api/auth/logout.php">Logout</a>
-      </div>
-
-      <div class="col-md-9 col-lg-10 p-4">
-        <div class="card top-card mb-4">
-          <div class="card-body p-4">
-            <h2 class="fw-bold mb-2">Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?></h2>
-            <p class="text-muted mb-0">Manage users, loans, KYC verification, and system reports from one place.</p>
-          </div>
+    <!-- Admin Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out pt-16 flex flex-col hidden sm:flex">
+        <div class="p-6 flex-1 overflow-y-auto">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-3">Admin Controls</h3>
+            <nav class="space-y-1.5">
+                <a href="admin_dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-50 text-brand-700 font-semibold transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard Header
+                </a>
+                <a href="admin_users.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
+                    <i data-lucide="users" class="w-5 h-5 text-gray-400"></i> Manage Users
+                </a>
+                <a href="admin_loans.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
+                    <i data-lucide="file-text" class="w-5 h-5 text-gray-400"></i> Loan Applications
+                </a>
+                <a href="admin_kyc.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-gray-400"></i> KYC Review
+                </a>
+                <a href="admin_reports.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium transition-colors">
+                    <i data-lucide="pie-chart" class="w-5 h-5 text-gray-400"></i> System Reports
+                </a>
+            </nav>
         </div>
-
-        <div class="row g-4">
-          <div class="col-md-6 col-xl-3">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h6 class="text-muted">Users</h6>
-                <h3 class="fw-bold">Manage</h3>
-                <a href="admin_users.php" class="btn btn-primary btn-sm mt-2">Open</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-3">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h6 class="text-muted">Applications</h6>
-                <h3 class="fw-bold">Review</h3>
-                <a href="admin_loans.php" class="btn btn-dark btn-sm mt-2">Open</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-3">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h6 class="text-muted">KYC Review</h6>
-                <h3 class="fw-bold">Verify</h3>
-                <a href="admin_kyc.php" class="btn btn-warning btn-sm mt-2">Open</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-3">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h6 class="text-muted">Reports</h6>
-                <h3 class="fw-bold">Analyze</h3>
-                <a href="admin_reports.php" class="btn btn-success btn-sm mt-2">Open</a>
-              </div>
-            </div>
-          </div>
+        <div class="p-4 border-t border-gray-100">
+            <a href="../../backend/api/auth/logout.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 font-medium transition-colors w-full">
+                <i data-lucide="log-out" class="w-5 h-5 text-red-500"></i> Secure Logout
+            </a>
         </div>
+    </aside>
 
-        <?php include "../partials/chatbot_widget.php"; ?>
-      </div>
-    </div>
-  </div>
-</div>
+    <!-- Main Content Area -->
+    <main class="md:ml-64 pt-16 h-screen overflow-y-auto pb-24 md:pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Page Header -->
+            <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-6 sm:p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute right-0 top-0 w-64 h-64 bg-brand-50 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl opacity-50 pointer-events-none"></div>
+                <div class="absolute right-0 bottom-0 w-32 h-32 bg-blue-50 rounded-full translate-x-1/4 translate-y-1/4 blur-2xl opacity-50 pointer-events-none"></div>
 
-<script>
-  window.addEventListener("load", function () {
-    setTimeout(function () {
-      document.getElementById("splashScreen").style.display = "none";
-      document.getElementById("pageContent").style.display = "block";
-    }, 1200);
-  });
-</script>
+                <div class="relative z-10">
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Admin Portal Overview</h1>
+                    <p class="text-sm text-gray-500 mt-1 max-w-2xl">Welcome back, <span class="font-semibold text-gray-700"><?php echo htmlspecialchars($_SESSION['name']); ?></span>. Monitor system health, verify credentials, and process loans.</p>
+                </div>
+            </div>
 
+            <!-- Dashboard Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                
+                <!-- Users Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100 group-hover:bg-blue-600 transition-colors">
+                            <i data-lucide="users" class="w-6 h-6 text-blue-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium mb-1">User Management</h3>
+                        <p class="text-2xl font-bold text-gray-900 mb-4">Users</p>
+                        <a href="admin_users.php" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                            Go to directory <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Applications Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 flex items-center justify-center border border-brand-100 group-hover:bg-brand-600 transition-colors">
+                            <i data-lucide="file-text" class="w-6 h-6 text-brand-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium mb-1">Loan Processing</h3>
+                        <p class="text-2xl font-bold text-gray-900 mb-4">Applications</p>
+                        <a href="admin_loans.php" class="text-sm font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1">
+                            Review pipeline <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KYC Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center border border-amber-100 group-hover:bg-amber-500 transition-colors">
+                            <i data-lucide="shield-alert" class="w-6 h-6 text-amber-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium mb-1">Identity Verification</h3>
+                        <p class="text-2xl font-bold text-gray-900 mb-4">KYC Review</p>
+                        <a href="admin_kyc.php" class="text-sm font-semibold text-amber-600 hover:text-amber-800 flex items-center gap-1">
+                            Verify documents <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Reports Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 group-hover:bg-emerald-600 transition-colors">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-emerald-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-gray-500 text-sm font-medium mb-1">System Analytics</h3>
+                        <p class="text-2xl font-bold text-gray-900 mb-4">Reports</p>
+                        <a href="admin_reports.php" class="text-sm font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
+                            View insights <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Future Dashboard Expansion Placeholder -->
+             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center opacity-70">
+                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                    <i data-lucide="bar-chart-3" class="w-8 h-8 text-gray-400"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Detailed Analytics Coming Soon</h3>
+                <p class="text-gray-500 max-w-md">System wide charts, loan disbursement metrics, and repayment tracking visualizations will appear here in a future update.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

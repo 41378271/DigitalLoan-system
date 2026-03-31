@@ -1,0 +1,48 @@
+USER STORIES
+
+BORROWER STORIES
+
+1. Registration
+As a borrower, I want to register an account so that I can access the system.
+
+2. Login
+As a borrower, I want to log in so that I can access my dashboard.
+
+3. Apply for Loan
+As a borrower, I want to fill a loan application form so that I can request a loan.
+
+4. Upload KYC
+As a borrower, I want to upload my documents (ID, proof) so that my application can be verified.
+
+5. View Loan Status
+As a borrower, I want to see the status of my loan so that I know if it is approved or rejected.
+
+6. Receive Notifications
+As a borrower, I want to receive updates so that I stay informed about my application.
+
+7. Use AI Chatbot
+As a borrower, I want to ask questions using the chatbot so that I understand the loan process.
+
+
+ADMIN STORIES
+
+1. Login
+As an admin, I want to log in so that I can manage the system.
+
+2. View Applications
+As an admin, I want to see all loan applications so that I can review them.
+
+3. Review Application
+As an admin, I want to view borrower details and documents so that I can make a decision.
+
+4. Approve Loan
+As an admin, I want to approve a loan so that funds can be disbursed.
+
+5. Reject Loan
+As an admin, I want to reject a loan so that invalid applications are filtered.
+
+6. View Reports
+As an admin, I want to see reports so that I can monitor system performance.
+
+7. Use AI Chatbot
+As an admin, I want to use the chatbot for quick guidance so that I can work efficiently.

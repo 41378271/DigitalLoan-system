@@ -1,0 +1,42 @@
+REQUIREMENTS PACK SUMMARY (WATERFALL)
+
+FILES COMPLETED
+✅ permissions.txt
+✅ user_stories.txt
+✅ acceptance_criteria.txt
+✅ functional_requirements.txt
+✅ non_functional_requirements.txt
+
+SCOPE CONFIRMATION (MUST HAVE)
+Borrower:
+- Register/Login (Phone required, Email optional; login by Phone OR Email)
+- Borrower dashboard
+- Loan application submission
+- KYC upload (PDF/JPG/PNG)
+- Loan status tracking
+- Notifications (mock)
+- Floating AI Chatbot (bottom-right)
+
+Admin:
+- Admin login
+- Admin dashboard with application table
+- Review borrower + KYC
+- Approve/Reject (with reason)
+- Disbursement (mock)
+- Reporting (basic)
+- Floating AI Chatbot (bottom-right)
+
+SECURITY & RULES
+- RBAC enforced (borrower cannot access admin pages)
+- Borrower can only see own data
+- Passwords stored hashed (not plain text)
+- Basic audit logging of important actions
+
+WORKFLOW STATES (AGREED)
+Submitted → Under Review → Approved/Rejected → Disbursed
+
+CHATBOT SAFETY (AGREED)
+- Never reveal other users’ data
+- Never approve/reject loans
+- Never disburse money
+- Guides process + FAQs and directs sensitive issues to admin support

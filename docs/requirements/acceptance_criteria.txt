@@ -1,0 +1,121 @@
+ACCEPTANCE CRITERIA
+
+BORROWER
+
+1) Registration
+- Given I am a new borrower
+  When I submit the registration form with required fields
+  Then my account is created successfully
+- If I leave a required field empty
+  Then I see an error message
+- If I use an email/phone that already exists
+  Then I see “account already exists”
+
+2)Login (Phone Number or Email)
+
+- Given I have a valid account
+  When I enter my phone number OR email and correct password
+  Then I am logged in and taken to the correct dashboard
+
+- If I enter incorrect credentials
+  Then I see “invalid login” and remain on login page
+
+- If I leave phone/email or password empty
+  Then I see a validation error
+
+- The system shall allow login using:
+  - phone number + password (primary method)
+  - email + password (optional alternative)
+
+3) Apply for Loan
+- Given I am logged in as borrower
+  When I submit a loan application with amount + term + purpose
+  Then the system saves the application and sets status to “Submitted”
+- If amount is missing or invalid (<= 0)
+  Then I see an error message and the form is not saved
+
+4) Upload KYC
+- Given I have a loan application
+  When I upload a supported file (PDF/JPG/PNG) under the size limit
+  Then the file is stored and linked to my application
+- If file type is not supported
+  Then I see “unsupported file type”
+- If file is too large
+  Then I see “file too large”
+
+5) View Loan Status
+- Given I have submitted an application
+  When I open “Loan Status”
+  Then I can see the current status (Submitted/Under Review/Approved/Rejected/Disbursed)
+- I must only see MY applications, not other borrowers’ data
+
+6) Notifications (Mock for Phase 1)
+- Given my loan status changes
+  When the system updates the status
+  Then a notification record is created
+  And I can see it in my dashboard notifications area
+
+7) AI Chatbot (Floating bot)
+- Given I am on Borrower Dashboard
+  When I click the chatbot button (bottom-right)
+  Then a chat panel opens
+- When I ask about loan requirements, KYC upload, or status meanings
+  Then I get a helpful response
+- The chatbot must NOT:
+  - reveal other users’ information
+  - approve loans
+  - show admin-only data
+
+
+ADMIN
+
+1) Admin Login
+- Given I am an admin
+  When I enter my phone number OR email and correct password
+  Then I am taken to Admin Dashboard
+- If credentials are incorrect
+  Then I see an error message
+
+2) View Applications
+- Given I am logged in as admin
+  When I open the applications table
+  Then I can see all submitted applications with key columns (Borrower, Amount, Date, Status)
+
+3) Review Application
+- Given I opened an application
+  When I view borrower details and KYC
+  Then I can see the information needed to decide
+
+4) Approve Loan
+- Given an application is “Submitted” or “Under Review”
+  When I click Approve
+  Then status becomes “Approved”
+  And an approval record (date + admin) is saved
+  And a borrower notification is created
+
+5) Reject Loan
+- Given an application is “Submitted” or “Under Review”
+  When I click Reject and provide a reason
+  Then status becomes “Rejected”
+  And rejection reason is saved
+  And a borrower notification is created
+
+6) Disbursement (Mock for Phase 1)
+- Given an application is “Approved”
+  When I click “Disburse”
+  Then status becomes “Disbursed”
+  And a mock transaction record is saved (amount, date, reference)
+
+7) Reports
+- Given I am an admin
+  When I open Reports
+  Then I can see totals (Submitted, Approved, Rejected, Disbursed)
+
+8) AI Chatbot (Floating bot)
+- Given I am on Admin Dashboard
+  When I click the chatbot button
+  Then the panel opens
+- The chatbot must NOT:
+  - reveal borrower data that I did not open/select
+  - approve loans
+  - override admin actions

@@ -1,0 +1,52 @@
+ROLE-BASED ACCESS (RBAC)
+
+ROLE: Borrower
+CAN:
+- Register account
+- Login
+- View borrower dashboard
+- Create loan application
+- Upload KYC documents for own application
+- View own loan status and history
+- Receive notifications about own loan
+- Use AI chatbot for guidance (FAQ + process help)
+
+CANNOT:
+- View other borrowers’ information
+- View admin dashboard
+- Approve/reject loans
+- Trigger real disbursement (system/admin only)
+- Access reports for all users
+
+ROLE: Admin (Loan Officer)
+CAN:
+- Login
+- View admin dashboard
+- View all loan applications
+- Review borrower profiles and KYC documents
+- Approve or reject loan applications
+- Record/mock disbursement (later: integrate mobile money)
+- Send/respond to notifications (optional)
+- View reports (applications, approvals, rejections, disbursements)
+- Manage users (basic: view/disable; advanced: create admin)
+
+CANNOT:
+- See borrower passwords
+- Use chatbot to reveal private borrower data outside the selected application
+
+AI CHATBOT (FEATURE, NOT A ROLE)
+AVAILABLE ON:
+- Borrower Dashboard (floating bottom-right)
+- Admin Dashboard (floating bottom-right)
+OPTIONAL:
+- Login/Register pages (later)
+
+PHASE 1 (Rule-based FAQ)
+- Answers common questions: requirements, KYC upload steps, status meanings, contact/support
+- Never approves loans; only explains process
+- Never reveals other users’ data
+
+PHASE 2 (AI service / LLM API)
+- Same rules as Phase 1, plus:
+  - Must refuse requests for other people’s data
+  - Must redirect sensitive cases to admin support

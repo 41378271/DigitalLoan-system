@@ -1,0 +1,39 @@
+SYSTEM ARCHITECTURE (3-TIER, LOCAL-FIRST, CLOUD-READY)
+
+TIER 1: Presentation Layer (Frontend)
+- Browser UI (HTML/CSS/JS)
+- Screens:
+  - Splash screen
+  - Login/Register
+  - Borrower Dashboard (with floating chatbot bottom-right)
+  - Admin Dashboard (with floating chatbot bottom-right)
+
+TIER 2: Application Layer (Backend)
+- PHP (Apache via XAMPP)
+- Responsibilities:
+  - Authentication (login/register/logout)
+  - Role-based access control (Borrower/Admin)
+  - Loan application handling (create, update, status)
+  - KYC upload handling (validate type/size, store file, link to application)
+  - Admin actions (review, approve, reject, disburse mock)
+  - Notifications (mock first)
+  - Reporting (basic counts and lists)
+  - Chatbot service (Phase 1 rule-based FAQ; Phase 2 connect to AI API later)
+
+TIER 3: Data Layer (Database + File Storage)
+- MySQL (XAMPP)
+  - Stores users, loans, documents metadata, statuses, notifications, logs
+- Local file storage (dev only)
+  - Stores actual KYC files in: backend/uploads/kyc/
+
+EXTERNAL SERVICES (Later / Optional)
+- Mobile Money (Phase 1 mock → Phase 2 M-Pesa integration)
+- Email/SMS gateway (Phase 1 mock → Phase 2 real provider)
+- AI service (Phase 2: LLM API connection with safety rules)
+
+SECURITY NOTES (Design-Level)
+- HTTPS/SSL: required in cloud deployment (not needed for local demo)
+- Password hashing
+- RBAC checks on every protected page/action
+- KYC files stored outside public web folders if possible (or protected by backend routing)
+- Basic logging of key actions

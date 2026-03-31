@@ -1,0 +1,138 @@
+UI WIREFRAME CHECKLIST
+
+1) SPLASH SCREEN
+- App name/logo
+- Short description: “Digital Loan System”
+- Button: Login
+- Button: Register
+
+-------------------------------------
+
+2) LOGIN PAGE
+- Input: Phone OR Email
+- Input: Password
+- Button: Login
+- Link: Register
+- Error message area
+
+-------------------------------------
+
+3) REGISTER PAGE
+- Input: Full Name
+- Input: Phone (required)
+- Input: Email (optional)
+- Input: Password
+- Button: Register
+
+-------------------------------------
+
+4) BORROWER DASHBOARD
+
+LAYOUT:
+- Sidebar (left)
+- Main content (right)
+- Floating chatbot button (bottom-right)
+
+SIDEBAR ITEMS:
+- Dashboard (home)
+- Apply Loan
+- My Loans
+- Upload KYC
+- Notifications
+- Logout
+
+MAIN CONTENT:
+- Loan summary card (latest status)
+- Quick actions buttons
+- Notifications preview
+
+CHATBOT:
+- Small round button (bottom-right)
+- Opens chat panel
+- FAQ responses only (Phase 1)
+
+-------------------------------------
+
+5) APPLY LOAN PAGE
+- Input: Amount
+- Input: Term (months)
+- Input: Purpose
+- Button: Submit Application
+
+-------------------------------------
+
+6) MY LOANS PAGE
+- Table:
+  - Loan ID
+  - Amount
+  - Term
+  - Status
+  - Date
+
+-------------------------------------
+
+7) UPLOAD KYC PAGE
+- File upload input
+- Allowed: PDF, JPG, PNG
+- Button: Upload
+- List of uploaded documents
+
+-------------------------------------
+
+8) ADMIN DASHBOARD
+
+LAYOUT:
+- Sidebar (left)
+- Main content (right)
+- Floating chatbot (bottom-right)
+
+SIDEBAR:
+- Dashboard
+- Applications
+- Reports
+- Logout
+
+MAIN CONTENT:
+- Summary cards:
+  - Submitted
+  - Under Review
+  - Approved
+  - Rejected
+  - Disbursed
+
+- Applications table:
+  - Loan ID
+  - Borrower Name
+  - Amount
+  - Status
+  - Actions (View / Approve / Reject)
+
+-------------------------------------
+
+9) APPLICATION REVIEW PAGE (ADMIN)
+- Borrower details
+- Loan details
+- KYC documents (view/download)
+- Buttons:
+  - Approve
+  - Reject (with reason)
+
+-------------------------------------
+
+10) REPORTS PAGE
+- Total loans
+- Approved count
+- Rejected count
+- Recent activity list
+
+-------------------------------------
+
+11) CHATBOT UI (ALL DASHBOARDS)
+- Floating button (bottom-right)
+- Chat window:
+  - User message input
+  - Bot response area
+- Rules:
+  - No approvals
+  - No private data
+  - Guidance only

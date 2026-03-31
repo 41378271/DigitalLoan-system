@@ -1,0 +1,42 @@
+NON-FUNCTIONAL REQUIREMENTS
+
+NFR-1 Security
+- The system shall require login for borrower and admin dashboards.
+- The system shall enforce role-based access control (RBAC) so borrowers cannot access admin pages.
+- Passwords shall be stored securely (hashed, not plain text).
+- The system shall protect against common web attacks (basic input validation, avoid SQL injection).
+
+NFR-2 Privacy & Data Protection
+- Borrowers shall only access their own personal data, loan applications, and KYC files.
+- Admins shall access borrower data only for review/approval purposes.
+- The AI chatbot shall not reveal other users’ data or confidential information.
+
+NFR-3 Performance
+- The system shall load main pages (dashboards) within a reasonable time on a local server (target: under 3 seconds).
+- The system shall support at least 50 simultaneous loan applications stored in the database (local demo target).
+
+NFR-4 Reliability & Availability (Local First)
+- The system shall run reliably on XAMPP (Windows) for demo use.
+- The system shall handle errors gracefully (show friendly messages instead of breaking).
+
+NFR-5 File Upload Constraints (KYC)
+- The system shall only accept KYC file types: PDF, JPG, PNG.
+- The system shall limit file size (default: max 5MB per document).
+- Uploaded KYC files shall be stored in a non-public folder and linked in the database.
+
+NFR-6 Usability
+- The borrower dashboard shall be simple and easy to use (apply loan, upload KYC, status view).
+- The admin dashboard shall clearly show application lists and approve/reject actions.
+- The chatbot button shall always appear at the bottom-right on both dashboards.
+
+NFR-7 Audit & Logging (Basic)
+- The system shall record key actions (login, submit application, approve/reject, disbursement).
+- Logs shall include timestamp and user role.
+
+NFR-8 Maintainability
+- The code shall be organized into folders (frontend, backend, docs).
+- Configuration (DB connection) shall be in one place (db.php).
+
+NFR-9 Scalability (Future Cloud Upgrade)
+- The system shall be designed so it can later move from local storage to cloud hosting.
+- The system shall later support cloud file storage for KYC and real SMS/mobile money integrations.

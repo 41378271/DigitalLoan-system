@@ -1,0 +1,63 @@
+API ENDPOINTS (PHP)
+
+BASE PATH (local):
+/digital-loan-system/backend/api/
+
+AUTH
+1) POST auth/register.php
+Request (form fields): full_name, phone, email(optional), password
+Response (JSON): success true/false, message
+
+2) POST auth/login.php
+Request: identifier (phone or email), password
+Response: success true/false, role, user_id, message
+
+3) POST auth/logout.php
+Request: none
+Response: success true/false
+
+BORROWER - LOANS
+4) POST loans/create.php
+Request: user_id, amount, term_months, purpose
+Response: success true/false, loan_id, status
+
+5) GET loans/my_loans.php?user_id=XX
+Response: list of borrower loans (id, amount, term, status, created_at)
+
+6) GET loans/view.php?loan_id=XX
+Response: loan details + status
+
+KYC UPLOAD
+7) POST kyc/upload.php
+Request: loan_id, user_id, file (PDF/JPG/PNG)
+Response: success true/false, file_path
+
+ADMIN - REVIEW & ACTIONS
+8) GET admin/applications.php
+Response: list of all applications (loan_id, borrower, amount, status, date)
+
+9) POST admin/set_status.php
+Request: admin_id, loan_id, status (under_review/approved/rejected/disbursed), reason(optional)
+Response: success true/false
+
+10) POST admin/disburse_mock.php
+Request: admin_id, loan_id
+Response: success true/false, reference_code
+
+NOTIFICATIONS
+11) GET notifications/list.php?user_id=XX
+Response: list of notifications
+
+12) POST notifications/mark_read.php
+Request: user_id, notification_id
+Response: success true/false
+
+REPORTS (BASIC)
+13) GET reports/summary.php
+Response: totals by status + recent activity
+
+CHATBOT (PHASE 1 RULE-BASED)
+14) POST chatbot/ask.php
+Request: role (borrower/admin), question (text)
+Response: answer (text), safe=true
+Rules: no private data, no approvals, guidance only

@@ -1,0 +1,58 @@
+DATABASE SCHEMA (MySQL)
+
+1) USERS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- full_name (VARCHAR)
+- phone (VARCHAR, UNIQUE)
+- email (VARCHAR, NULLABLE)
+- password (VARCHAR)  // hashed
+- role (ENUM: 'borrower', 'admin')
+- created_at (TIMESTAMP)
+
+-------------------------------------
+
+2) LOANS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- user_id (INT, FOREIGN KEY → users.id)
+- amount (DECIMAL)
+- term_months (INT)
+- purpose (TEXT)
+- status (ENUM: 'submitted', 'under_review', 'approved', 'rejected', 'disbursed')
+- created_at (TIMESTAMP)
+
+-------------------------------------
+
+3) KYC_DOCUMENTS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- user_id (INT, FOREIGN KEY → users.id)
+- loan_id (INT, FOREIGN KEY → loans.id)
+- file_path (VARCHAR)
+- file_type (VARCHAR)
+- uploaded_at (TIMESTAMP)
+
+-------------------------------------
+
+4) NOTIFICATIONS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- user_id (INT, FOREIGN KEY → users.id)
+- message (TEXT)
+- is_read (BOOLEAN)
+- created_at (TIMESTAMP)
+
+-------------------------------------
+
+5) DISBURSEMENTS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- loan_id (INT, FOREIGN KEY → loans.id)
+- amount (DECIMAL)
+- reference_code (VARCHAR)
+- disbursed_at (TIMESTAMP)
+
+-------------------------------------
+
+6) AUDIT_LOGS TABLE
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- user_id (INT, FOREIGN KEY → users.id)
+- action (VARCHAR)
+- description (TEXT)
+- created_at (TIMESTAMP)

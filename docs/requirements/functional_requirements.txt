@@ -1,0 +1,132 @@
+FUNCTIONAL REQUIREMENTS
+Digital Loan Application and Approval System for Microfinance Clients
+
+A) BORROWER FEATURES
+
+FR-B1 Registration
+- The system shall allow borrowers to register using:
+  - Full Name
+  - Phone Number (required)
+  - Email (optional)
+  - Password
+
+FR-B2 Login/Logout
+- The system shall allow borrowers to login using Phone Number OR Email + Password.
+- The system shall allow borrowers to logout.
+
+FR-B3 Borrower Dashboard
+- The system shall display a borrower dashboard with:
+  - Loan summary (latest status)
+  - Notifications list
+  - Quick actions: Apply for Loan, Upload KYC, View Status
+  - Floating AI chatbot (bottom-right)
+
+FR-B4 Loan Application Submission
+- The system shall allow borrowers to submit a loan application with:
+  - Amount requested
+  - Repayment term (months)
+  - Purpose
+  - Optional notes
+
+FR-B5 KYC Document Upload
+- The system shall allow borrowers to upload KYC documents (PDF/JPG/PNG).
+- The system shall store uploaded files and link them to the borrower’s loan application.
+
+FR-B6 Basic Eligibility / Validation
+- The system shall validate required fields and prevent invalid values (e.g., amount <= 0).
+- The system shall stop submission if validation fails and show an error message.
+
+FR-B7 Loan Status Tracking
+- The system shall allow borrowers to view loan status:
+  Submitted, Under Review, Approved, Rejected, Disbursed.
+- Borrowers shall only see their own loans.
+
+FR-B8 Notifications (Phase 1 Mock)
+- The system shall create a notification when:
+  - loan submitted
+  - status changes
+  - loan approved/rejected
+  - loan disbursed
+- Borrowers shall view notifications on the borrower dashboard.
+
+FR-B9 Floating AI Chatbot (Borrower)
+- The system shall display a floating chatbot button (bottom-right) on borrower dashboard.
+- The chatbot shall answer FAQ about:
+  - loan requirements
+  - status meanings
+  - how to apply
+  - how to upload KYC
+  - who to contact for help
+- The chatbot shall follow safety rules (no approvals, no other users’ data).
+
+
+B) ADMIN (LOAN OFFICER) FEATURES
+
+FR-A1 Admin Login/Logout
+- The system shall allow admin to login using Phone Number OR Email + Password.
+- The system shall allow admin to logout.
+
+FR-A2 Admin Dashboard
+- The system shall display an admin dashboard with:
+  - Summary cards (Submitted, Approved, Rejected, Disbursed)
+  - Table listing loan applications
+  - Actions: Review, Approve, Reject, Disburse (mock)
+  - Floating AI chatbot (bottom-right)
+
+FR-A3 View Loan Applications
+- The system shall allow admin to view all loan applications.
+- The system shall show key fields: borrower name, amount, date, status.
+
+FR-A4 Review Application & KYC
+- The system shall allow admin to open an application and view:
+  - borrower details
+  - loan details
+  - KYC documents
+
+FR-A5 Approve Loan
+- The system shall allow admin to approve an application.
+- The system shall record approval details (date, admin user).
+
+FR-A6 Reject Loan
+- The system shall allow admin to reject an application with a reason.
+- The system shall record the rejection reason and date.
+
+FR-A7 Disbursement (Phase 1 Mock)
+- The system shall allow admin to trigger a mock disbursement for approved loans.
+- The system shall save a transaction record (amount, date, reference).
+
+FR-A8 Reports
+- The system shall provide basic reports:
+  - totals by status
+  - recent applications
+  - recent approvals/rejections
+  - recent disbursements
+
+FR-A9 Floating AI Chatbot (Admin)
+- The system shall display a floating chatbot button (bottom-right) on admin dashboard.
+- The chatbot shall guide admin about workflow steps and reporting.
+- The chatbot shall not expose borrower data unless the admin has opened that application.
+
+
+C) GENERAL SYSTEM FEATURES
+
+FR-G1 Role-Based Access Control (RBAC)
+- The system shall restrict pages and actions based on role (Borrower/Admin).
+
+FR-G2 Audit Logging (Basic)
+- The system shall log key events:
+  - login attempts
+  - loan application submission
+  - approve/reject actions
+  - disbursement action
+
+FR-G3 Workflow States
+- The system shall enforce workflow states:
+  Submitted → Under Review → Approved/Rejected → Disbursed
+
+FR-G4 Chatbot Safety Rules
+- The chatbot shall never:
+  - reveal other users’ data
+  - approve/reject loans
+  - perform disbursement
+- The chatbot shall redirect sensitive issues to admin support.

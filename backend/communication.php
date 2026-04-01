@@ -1,14 +1,15 @@
 <?php
-require 'config.php';
+require_once __DIR__ . '/config/db.php';
 
 /* 
    SAVE IN-SYSTEM NOTIFICATION
  */
-function saveNotification($user_id, $message, $type = "info") {
+function saveNotification($user_id, $message, $title = "Notification") {
     global $conn;
+    if (!$conn) return;
 
-    $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, type) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $user_id, $message, $type);
+    $stmt = $conn->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
+    $stmt->bind_param("iss", $user_id, $title, $message);
     $stmt->execute();
 }
 

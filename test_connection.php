@@ -1,19 +1,12 @@
 <?php
-$host = 'localhost';
+$host = '127.0.0.1';
 $user = 'root';
 $pass = '';
 $db = 'digital_loan_db';
 
 try {
-    $pdo = new PDO("mysql:host=$host", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
     echo "Connected to MySQL host successfully!\n";
-    
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS $db");
-    echo "Database '$db' ensured.\n";
-    
-    $pdo->exec("USE $db");
-    echo "Using database '$db'.\n";
-    
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage() . "\n";
 }

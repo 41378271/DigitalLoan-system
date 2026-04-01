@@ -17,8 +17,9 @@ function wallet_get($conn, $user_id){
 }
 
 function wallet_add_tx($conn, $user_id, $type, $amount, $balance_after, $ref=null){
-  $stmt = $conn->prepare("INSERT INTO wallet_transactions (user_id, type, amount, balance_after, ref) VALUES (?,?,?,?,?)");
-  $stmt->bind_param("issds", $user_id, $type, $amount, $balance_after, $ref);
+  $currency = 'KES';
+  $stmt = $conn->prepare("INSERT INTO wallet_transactions (user_id, type, amount, balance_after, currency, ref) VALUES (?,?,?,?,?,?)");
+  $stmt->bind_param("isddss", $user_id, $type, $amount, $balance_after, $currency, $ref);
   $stmt->execute();
 }
 

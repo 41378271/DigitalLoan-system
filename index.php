@@ -90,6 +90,8 @@ $routes = [
     '/admin/kyc' => 'frontend/pages/admin_kyc.php',
     '/admin/users' => 'frontend/pages/admin_users.php',
     '/admin/reports' => 'frontend/pages/admin_reports.php',
+    '/admin-secret-setup' => 'frontend/pages/admin_register_page.php',
+    '/admin-login' => 'frontend/pages/login_page.php',
     '/logout' => 'backend/api/auth/logout.php'
 ];
 

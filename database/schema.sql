@@ -165,7 +165,7 @@ CREATE TABLE `notifications` (
 -- Table `audit_logs`
 -- --------------------------------------------------------
 CREATE TABLE `audit_logs` (
-  `id`` INT(11) NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) DEFAULT NULL,
   `action` VARCHAR(100) NOT NULL,
   `description` TEXT NOT NULL,

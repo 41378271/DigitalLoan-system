@@ -3,9 +3,13 @@
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Detect base path dynamically if running in a subdirectory
-$scriptName = dirname($_SERVER['SCRIPT_NAME']);
-$basePath = ($scriptName === '/' || $scriptName === '\\') ? '' : $scriptName;
+// Robust base path detection
+$docRoot = str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/\\'));
+$dirStr = str_replace('\\', '/', __DIR__);
+$basePath = '';
+if ($docRoot !== '' && strpos($dirStr, $docRoot) === 0) {
+    $basePath = substr($dirStr, strlen($docRoot));
+}
 
 // Strip base path from request URI
 if ($basePath !== '' && strpos($requestUri, $basePath) === 0) {
@@ -16,9 +20,24 @@ if ($basePath !== '' && strpos($requestUri, $basePath) === 0) {
 
 if ($route === '') $route = '/';
 
-// Serve actual files directly if they exist (for css, js, images, api)
+// Serve actual files directly if they exist (for static assets: css, js, images)
+// PHP files can only be executed this way if they are inside backend/api/
 if (file_exists(__DIR__ . $route) && !is_dir(__DIR__ . $route)) {
-    return false; // let the web server handle it
+    $filePath = __DIR__ . $route;
+    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+    if ($ext === 'php') {
+        // Only allow direct PHP execution for backend API scripts
+        if (strpos($route, '/backend/api/') === 0) {
+            chdir(dirname($filePath));
+            require $filePath;
+            return true;
+        }
+        // Block direct access to frontend PHP files
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Forbidden']);
+        return true;
+    }
+    return false; // let the web server handle static files
 }
 
 // Redirect old .php URLs to new clean URLs
@@ -83,6 +102,7 @@ if (isset($routes[$route])) {
         return true;
     }
 }
+
 
 // 404 Not Found
 http_response_code(404);

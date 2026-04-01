@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 ?>
@@ -135,7 +135,7 @@ if (!isset($_SESSION['user_id'])) {
 
             try {
                 // Using unified apiCall from navbar.php if available, otherwise fetch
-                const res = await fetch("../../backend/api/loans/my_loans.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/loans/my_loans.php");
                 const data = await res.json();
 
                 if (!data.success) {
@@ -318,7 +318,7 @@ if (!isset($_SESSION['user_id'])) {
             // Fetch live wallet balance dynamically
             try {
                 // If using unified apiCall (loaded from navbar if available)
-                const res = await fetch("../../backend/api/wallet/get_balance.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/wallet/get_balance.php");
                 const data = await res.json();
                 
                 if (data.success) {
@@ -375,7 +375,7 @@ if (!isset($_SESSION['user_id'])) {
                 fd.append('loan_id', activeLoan.id);
                 fd.append('amount', amt);
 
-                const res = await fetch("../../backend/api/wallet/pay_loan.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/wallet/pay_loan.php", {
                     method: 'POST',
                     body: fd
                 });

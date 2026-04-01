@@ -1,7 +1,7 @@
 <?php  
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 ?>
@@ -169,7 +169,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
             loansTableBody.innerHTML = '';
             
             try {
-                const res = await fetch("../../backend/api/admin/loans/list.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/loans/list.php");
                 const data = await res.json();
 
                 if (!data.success) {
@@ -273,7 +273,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
             if (!collateralId) return;
 
             try {
-                const res = await fetch("../../backend/api/admin/loans/verify_collateral.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/loans/verify_collateral.php", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({ collateral_id: collateralId })
@@ -295,7 +295,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
 
         async function updateLoan(id, status) {
             try {
-                const res = await fetch("../../backend/api/admin/loans/update_status.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/loans/update_status.php", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({ loan_id: id, status: status })
@@ -326,7 +326,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
         const modalVerifyBtn = document.getElementById('modalVerifyBtn');
 
         function openPreviewModal(filePath, collateralId, userName) {
-            const fileUrl = "../../" + filePath;
+            const fileUrl = "<?= $basePath ?? '' ?>/" + filePath;
             
             previewSubtitle.innerText = `Borrower: ${userName}`;
 

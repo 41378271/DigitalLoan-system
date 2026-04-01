@@ -3,7 +3,7 @@ session_start();
 require_once "../../backend/config/db.php";
 
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'] ?? '', ['borrower','user'])) {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 

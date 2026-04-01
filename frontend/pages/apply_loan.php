@@ -3,7 +3,7 @@ session_start();
 require_once "../../backend/config/db.php";
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 
@@ -294,7 +294,7 @@ $kyc_status = $row['status'] ?? 'not_uploaded';
                 
                 // Using the unified apiCall wrapper from partials/navbar.php if available, 
                 // else raw fetch. We'll use raw fetch with our toast handler to be safe.
-                const res = await fetch("../../backend/api/loans/apply.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/loans/apply.php", {
                     method: "POST",
                     body: formData
                 });
@@ -308,7 +308,7 @@ $kyc_status = $row['status'] ?? 'not_uploaded';
                     
                     // Redirect to loans list after a short delay
                     setTimeout(() => {
-                        window.location.href = "my_loans.php";
+                        window.location.href = '/my-loans';
                     }, 2000);
                 } else {
                     showToast(data.message || "Failed to submit application.", "error");

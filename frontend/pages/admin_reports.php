@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
-  header("Location: login_page.php");
+  header("Location: /login");
   exit;
 }
 ?>
@@ -29,12 +29,12 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
                 </div>
                 
                 <!-- Export Actions -->
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="../../backend/api/admin/reports/export_loans_csv.php" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                        <i data-lucide="download" class="w-4 h-4 text-emerald-600"></i> Export Loans CSV
+                <div class="mt-4 sm:mt-0 flex gap-3">
+                    <a href="<?= $basePath ?? '' ?>/backend/api/admin/reports/export_loans_csv.php" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                        <i data-lucide="download" class="w-4 h-4 text-gray-400"></i> Export Loans
                     </a>
-                    <a href="../../backend/api/admin/reports/export_kyc_csv.php" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                        <i data-lucide="download" class="w-4 h-4 text-blue-600"></i> Export KYC CSV
+                    <a href="<?= $basePath ?? '' ?>/backend/api/admin/reports/export_kyc_csv.php" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                        <i data-lucide="download" class="w-4 h-4 text-gray-400"></i> Export KYC
                     </a>
                 </div>
             </div>
@@ -207,7 +207,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
 
         async function loadReports(){
             try {
-                const res = await fetch("../../backend/api/admin/reports/summary.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/reports/summary.php");
                 const data = await res.json();
 
                 if(!data.success){

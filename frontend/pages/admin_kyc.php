@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 ?>
@@ -188,7 +188,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             kycTableBody.innerHTML = '';
             
             try {
-                const res = await fetch("../../backend/api/admin/kyc/list.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/kyc/list.php");
                 const data = await res.json();
 
                 if (!data.success) {
@@ -215,7 +215,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         tr.setAttribute('data-id', r.id);
                         tr.setAttribute('data-user', r.full_name);
                         tr.setAttribute('data-type', formatDocType(r.doc_type));
-                        tr.setAttribute('data-filepath', "../../" + r.file_path);
+                        tr.setAttribute('data-filepath', "<?= $basePath ?? '' ?>/" + r.file_path);
 
                         let actionsHtml = `
                             <button onclick="openPreviewModal(this)" class="text-brand-600 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 p-2 rounded-lg transition-colors inline-flex items-center gap-1 text-sm font-medium mr-2" title="View Document">
@@ -273,7 +273,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                 fd.append('id', id);
                 fd.append('status', status);
 
-                const res = await fetch("../../backend/api/admin/kyc/update_status.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/kyc/update_status.php", {
                     method: "POST",
                     body: fd
                 });

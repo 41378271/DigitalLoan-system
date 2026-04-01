@@ -9,5 +9,5 @@ if (ini_get("session.use_cookies")) {
   );
 }
 session_destroy();
-header("Location: /digital-loan-system/frontend/pages/login_page.php");
+header("Location: /login");
 exit;

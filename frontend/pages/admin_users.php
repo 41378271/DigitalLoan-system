@@ -1,7 +1,7 @@
 <?php 
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
-  header("Location: login_page.php");
+  header("Location: /login");
   exit;
 }
 ?>
@@ -190,8 +190,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
             usersTableBody.innerHTML = '';
             
             try {
-                // Fixed API path to be relative
-                const url = `../../backend/api/admin/users/list.php?q=${encodeURIComponent(q)}&only=${encodeURIComponent(only)}`;
+                const url = `<?= $basePath ?? '' ?>/backend/api/admin/users/list.php?q=${encodeURIComponent(q)}&only=${encodeURIComponent(only)}`;
                 const res = await fetch(url);
                 const data = await res.json();
 
@@ -329,7 +328,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
                 fd.append("user_id", pendingUserId);
                 fd.append("is_active", pendingActionIsActive);
 
-                const res = await fetch("../../backend/api/admin/users/set_active.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/admin/users/set_active.php", {
                     method: "POST",
                     body: fd
                 });

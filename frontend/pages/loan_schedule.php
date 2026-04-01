@@ -1,13 +1,13 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 
 $loan_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($loan_id <= 0) {
-    header("Location: my_loans.php");
+    header("Location: /my-loans");
     exit;
 }
 ?>
@@ -122,7 +122,7 @@ if ($loan_id <= 0) {
         async function loadSchedule() {
             try {
                 // Fetch the loan details
-                const res = await fetch(`../../backend/api/loans/my_loans.php`);
+                const res = await fetch(`<?= $basePath ?? '' ?>/backend/api/loans/my_loans.php`);
                 const data = await res.json();
 
                 if (!data.success) {
@@ -134,7 +134,7 @@ if ($loan_id <= 0) {
                 const loan = data.loans.find(l => parseInt(l.id) === LOAN_ID);
                 if (!loan) {
                     showToast("Loan not found", "error");
-                    setTimeout(() => window.location.href = "my_loans.php", 1500);
+                    setTimeout(() => window.location.href = "/my-loans", 1500);
                     return;
                 }
 

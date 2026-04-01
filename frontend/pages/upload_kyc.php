@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login_page.php");
+    header("Location: /login");
     exit;
 }
 ?>
@@ -260,7 +260,7 @@ if (!isset($_SESSION['user_id'])) {
                    
                    // optional redirect after a moment
                    setTimeout(() => {
-                        window.location.href = "borrower_dashboard.php";
+                        window.location.href = "/dashboard";
                    }, 2000);
                 } else {
                    // Application error

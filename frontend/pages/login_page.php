@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['user_id'])) {
-    $dashboard = ($_SESSION['role'] === 'admin') ? 'admin/dashboard' : 'dashboard';
+    $dashboard = ($_SESSION['role'] === 'admin') ? '/admin/dashboard' : '/dashboard';
     header("Location: $dashboard");
     exit;
 }
@@ -179,6 +179,8 @@ if (isset($_SESSION['user_id'])) {
                         } else {
                             window.location.href = 'dashboard';
                         }
+                    } else if (data.role === 'admin') {
+                        window.location.href = 'admin/dashboard';
                     } else {
                         window.location.href = 'dashboard';
                     }

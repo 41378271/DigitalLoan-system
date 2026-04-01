@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-  header("Location: login_page.php");
+  header("Location: /login");
   exit;
 }
 ?>
@@ -96,7 +96,7 @@ if (!isset($_SESSION['user_id'])) {
             listEl.innerHTML = "";
 
             try {
-                const res = await fetch("../../backend/api/notifications/list.php");
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/notifications/list.php");
                 const data = await res.json();
 
                 if(!data.success){
@@ -196,7 +196,7 @@ if (!isset($_SESSION['user_id'])) {
                 const form = new FormData();
                 form.append("id", id);
                 
-                const res = await fetch("../../backend/api/notifications/mark_read.php", {
+                const res = await fetch("<?= $basePath ?? '' ?>/backend/api/notifications/mark_read.php", {
                     method:"POST",
                     body: form
                 });

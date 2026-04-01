@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['user_id'])) {
-    $dashboard = ($_SESSION['role'] === 'admin') ? 'admin_dashboard.php' : 'borrower_dashboard.php';
+    $dashboard = ($_SESSION['role'] === 'admin') ? '/admin/dashboard' : '/dashboard';
     header("Location: $dashboard");
     exit;
 }
@@ -206,7 +206,7 @@ if (isset($_SESSION['user_id'])) {
                 
                 // Redirect immediately since register logs them in
                 setTimeout(() => {
-                    window.location.href = 'borrower_dashboard.php';
+                    window.location.href = '/dashboard';
                 }, 1000);
             } catch (error) {
                 // Revert buttons on error
